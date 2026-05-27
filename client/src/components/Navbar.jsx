@@ -83,10 +83,10 @@ function Navbar() {
           >
             <Link
               to="/"
-              className="flex items-center gap-2 text-white text-2xl font-bold hover:text-civic-green-200 transition-colors"
+              className="flex items-center gap-2 text-white font-bold hover:text-civic-green-200 transition-colors"
             >
               <span className="text-3xl">📍</span>
-              <span className="hidden sm:inline">CivicPulse</span>
+              <span className="text-xl sm:text-2xl">CivicPulse</span>
             </Link>
           </motion.div>
 

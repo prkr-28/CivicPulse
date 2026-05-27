@@ -193,11 +193,12 @@ function AiChatWidget() {
             overflow: 'hidden',
             animation: 'slideUp 0.3s ease',
             position: isMobile ? 'fixed' : 'relative',
-            bottom: isMobile ? '0' : 'auto',
-            left: isMobile ? '0' : 'auto',
-            right: isMobile ? '0' : 'auto',
-            borderBottomLeftRadius: isMobile ? '0' : '12px',
-            borderBottomRightRadius: isMobile ? '0' : '12px'
+            bottom: isMobile ? '50%' : 'auto',
+            left: isMobile ? '50%' : 'auto',
+            right: isMobile ? 'auto' : 'auto',
+            transform: isMobile ? 'translate(-50%, 50%)' : 'none',
+            borderBottomLeftRadius: isMobile ? '8px' : '12px',
+            borderBottomRightRadius: isMobile ? '8px' : '12px'
           }}
         >
           <div
