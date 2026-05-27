@@ -12,13 +12,36 @@ const aiRoutes = require('./routes/ai');
 
 const app = express();
 
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      imgSrc: ["'self'", 'data:', 'https://*.tile.openstreetmap.org', 'https://a.tile.openstreetmap.org', 'https://b.tile.openstreetmap.org', 'https://c.tile.openstreetmap.org']
-    }
-  }
-}));
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+
+        imgSrc: [
+          "'self'",
+          "data:",
+          "blob:",
+
+          // OpenStreetMap tiles
+          "https://*.tile.openstreetmap.org",
+          "https://a.tile.openstreetmap.org",
+          "https://b.tile.openstreetmap.org",
+          "https://c.tile.openstreetmap.org",
+
+          // Cloudinary images
+          "https://res.cloudinary.com",
+
+          // Leaflet marker icons
+          "https://cdnjs.cloudflare.com"
+        ],
+
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+      },
+    },
+  })
+);
 
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'https://civicpulse-gn5g.onrender.com',
