@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Button styles */
+  .btn-primary {
+    @apply bg-civic-green-500 hover:bg-civic-green-600 text-white px-4 sm:px-5 py-2 rounded-md font-semibold transition-all duration-300 cursor-pointer border-none;
+  }
+
+  .btn-primary:hover {
+    @apply shadow-md -translate-y-0.5;
+  }
+
+  .btn-secondary {
+    @apply bg-transparent border-2 border-civic-green-500 text-civic-green-500 hover:bg-civic-green-500 hover:text-white px-4 sm:px-5 py-2 rounded-md font-semibold transition-all duration-300 cursor-pointer;
+  }
+
+  /* Badge styles */
+  .badge {
+    @apply inline-block bg-civic-green-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-semibold;
+  }
+
+  .badge-open {
+    @apply bg-civic-red text-white;
+  }
+
+  .badge-in-progress {
+    @apply bg-civic-yellow text-gray-800;
+  }
+
+  .badge-resolved {
+    @apply bg-civic-success text-white;
+  }
+
+  .badge-rejected {
+    @apply bg-civic-gray text-white;
+  }
+
+  /* Loading spinner */
+  .spinner {
+    @apply w-8 sm:w-10 h-8 sm:h-10 border-4 border-gray-200 border-t-civic-green-500 rounded-full animate-spin mx-auto my-5;
+  }
+
+  /* Container */
+  .container {
+    @apply max-w-6xl mx-auto px-4 sm:px-5 md:px-6;
+  }
+
+  /* Form elements */
+  input:focus,
+  textarea:focus,
+  select:focus {
+    @apply outline-none border-civic-green-500 ring-4 ring-civic-green-300;
+  }
+
+  .error {
+    @apply text-civic-red text-xs sm:text-sm mt-1 mb-2;
+  }
+
+  .success {
+    @apply text-civic-success text-xs sm:text-sm mb-2;
+  }
+
+  /* Responsive text utilities */
+  .text-responsive-h1 {
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold;
+  }
+
+  .text-responsive-h2 {
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold;
+  }
+
+  .text-responsive-h3 {
+    @apply text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold;
+  }
+
+  /* Responsive padding utilities */
+  .px-responsive {
+    @apply px-4 sm:px-5 md:px-6 lg:px-8;
+  }
+
+  .py-responsive {
+    @apply py-6 sm:py-8 md:py-10 lg:py-12;
+  }
+
+  .p-responsive {
+    @apply p-4 sm:p-5 md:p-6 lg:p-8;
+  }
+}

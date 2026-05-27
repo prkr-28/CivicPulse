@@ -1,0 +1,35 @@
+# Node server .gitignore
+
+# dependencies
+node_modules/
+
+# environment
+.env
+.env.*
+
+# logs
+logs/
+*.log
+npm-debug.log*
+
+# runtime
+pids/
+*.pid
+*.seed
+
+# build
+/dist
+
+# coverage
+coverage/
+
+# editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# reports
+npm-debug.log*
