@@ -1,9 +1,22 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useAppSelector } from '../store/hooks';
-import { selectUser, selectIsAdmin } from '../store/slices/authSlice';
-import { useLogout } from '../store/useLogout';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAppSelector } from "../store/hooks";
+import { selectUser, selectIsAdmin } from "../store/slices/authSlice";
+import { useLogout } from "../store/useLogout";
+import {
+  MapPin,
+  Map,
+  Flag,
+  Info,
+  LayoutDashboard,
+  ClipboardList,
+  LogOut,
+  ChevronDown,
+  Menu,
+  X,
+  Bell,
+} from "lucide-react";
 
 function Navbar() {
   const user = useAppSelector(selectUser);
@@ -12,289 +25,328 @@ function Navbar() {
   const handleLogout = useLogout();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
 
   const getUserName = () => {
     if (user?.name) return user.name;
-    if (!user?.email) return 'User';
-    return user.email.split('@')[0].charAt(0).toUpperCase() + user.email.split('@')[0].slice(1);
+    if (!user?.email) return "User";
+    return (
+      user.email.split("@")[0].charAt(0).toUpperCase() +
+      user.email.split("@")[0].slice(1)
+    );
+  };
+
+  const getInitials = () => {
+    const name = getUserName();
+    return name.slice(0, 2).toUpperCase();
   };
 
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      if (currentScrollY < 100) {
-        setIsVisible(true);
-      }
-      else if (currentScrollY > lastScrollY) {
-        setIsVisible(false);
-      }
-      else {
-        setIsVisible(true);
-      }
-
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const onLogout = () => {
     handleLogout();
-    navigate('/');
+    navigate("/");
     setMobileMenuOpen(false);
     setProfileDropdownOpen(false);
   };
 
-  const navLinkVariants = {
-    hover: { scale: 1.05, color: '#7dd3c0' },
-    tap: { scale: 0.95 },
-  };
-
-  const mobileMenuVariants = {
-    hidden: { opacity: 0, height: 0 },
-    visible: {
-      opacity: 1,
-      height: 'auto',
-      transition: { duration: 0.3 },
-    },
-    exit: {
-      opacity: 0,
-      height: 0,
-      transition: { duration: 0.2 },
-    },
-  };
-
   return (
     <motion.nav
-      className="bg-civic-green-500 shadow-lg sticky top-0 z-50"
-      initial={{ y: 0 }}
-      animate={{ y: isVisible ? 0 : -80 }}
-      transition={{ duration: 0.3 }}
+      initial={{ y: -60, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.4 }}
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-white/95 backdrop-blur-md shadow-md border-b border-gray-100"
+          : "bg-white border-b border-gray-100"
+      }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Link
-              to="/"
-              className="flex items-center gap-2 text-white font-bold hover:text-civic-green-200 transition-colors"
-            >
-              <span className="text-3xl">📍</span>
-              <span className="text-xl sm:text-2xl">CivicPulse</span>
-            </Link>
-          </motion.div>
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="w-8 h-8 bg-civic-green-600 rounded-lg flex items-center justify-center group-hover:bg-civic-green-500 transition-colors">
+              <MapPin className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-xl font-bold text-gray-900 tracking-tight">
+              Civic<span className="text-civic-green-600">Pulse</span>
+            </span>
+          </Link>
 
+          {/* Center nav links - desktop */}
           {!isAdmin && (
-            <div className="hidden md:flex items-center gap-8">
-              <motion.div
-                variants={navLinkVariants}
-                whileHover="hover"
-                whileTap="tap"
+            <div className="hidden md:flex items-center gap-1">
+              <Link
+                to="/map"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-civic-green-600 hover:bg-civic-green-50 transition-all"
               >
-                <Link to="/map" className="text-white font-medium hover:text-civic-green-200 transition-colors">
-                  Map
-                </Link>
-              </motion.div>
-
-              <motion.div
-                variants={navLinkVariants}
-                whileHover="hover"
-                whileTap="tap"
+                <Map className="w-4 h-4" />
+                Map
+              </Link>
+              <Link
+                to="/report"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-civic-green-600 hover:bg-civic-green-50 transition-all"
               >
-                <Link to="/report" className="text-white font-medium hover:text-civic-green-200 transition-colors">
-                  Report
-                </Link>
-              </motion.div>
-
-              <motion.div
-                variants={navLinkVariants}
-                whileHover="hover"
-                whileTap="tap"
+                <Flag className="w-4 h-4" />
+                Report
+              </Link>
+              <a
+                href="/#features"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-civic-green-600 hover:bg-civic-green-50 transition-all"
               >
-                <a href="/#features" className="text-white font-medium hover:text-civic-green-200 transition-colors">
-                  About
-                </a>
-              </motion.div>
+                <Info className="w-4 h-4" />
+                About
+              </a>
             </div>
           )}
 
-          <div className="hidden md:flex items-center gap-4">
+          {/* Right side - desktop */}
+          <div className="hidden md:flex items-center gap-3">
+            {/* GitHub link */}
+            <a
+              href="https://github.com/prkr-28/CivicPulse"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Contribute on GitHub"
+              className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors text-sm font-bold"
+            >
+              GH
+            </a>
             {user ? (
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                {/* Bell */}
+                <button className="relative w-9 h-9 flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-civic-green-600 transition-colors">
+                  <Bell className="w-5 h-5" />
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-civic-green-500 rounded-full" />
+                </button>
+
+                {/* Avatar dropdown */}
                 <div className="relative">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                  <button
                     onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                    className="bg-white text-civic-green-600 hover:bg-gray-100 px-4 py-2 rounded-lg font-semibold transition-colors flex items-center gap-2"
+                    className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-xl border border-gray-200 hover:border-civic-green-300 hover:bg-gray-50 transition-all"
                   >
-                    👤 {getUserName()}
-                    <span className={`text-sm transition-transform ${profileDropdownOpen ? 'rotate-180' : ''}`}>▼</span>
-                  </motion.button>
+                    <div className="w-7 h-7 bg-civic-green-600 text-white rounded-lg flex items-center justify-center text-xs font-bold">
+                      {getInitials()}
+                    </div>
+                    <span className="text-sm font-medium text-gray-700 max-w-[100px] truncate">
+                      {getUserName()}
+                    </span>
+                    <ChevronDown
+                      className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${
+                        profileDropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
 
-                  {profileDropdownOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg overflow-hidden z-50"
-                    >
-                      <div className="px-4 py-3 border-b border-gray-200 bg-gray-50">
-                        <p className="text-sm font-semibold text-gray-700">{getUserName()}</p>
-                        <p className="text-xs text-gray-500 truncate">{user.email}</p>
-                        {isAdmin && (
-                          <p className="text-xs font-semibold text-civic-green-600 mt-1">⭐ Admin</p>
-                        )}
-                      </div>
-
-                      <div className="py-2">
-                        {isAdmin ? (
-                          <Link
-                            to="/admin"
-                            onClick={() => setProfileDropdownOpen(false)}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors font-medium"
+                  <AnimatePresence>
+                    {profileDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50"
+                      >
+                        <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
+                          <p className="text-sm font-semibold text-gray-800">
+                            {getUserName()}
+                          </p>
+                          <p className="text-xs text-gray-500 truncate">
+                            {user.email}
+                          </p>
+                          {isAdmin && (
+                            <span className="inline-block mt-1 text-xs font-semibold text-civic-green-700 bg-civic-green-100 px-2 py-0.5 rounded-full">
+                              Admin
+                            </span>
+                          )}
+                        </div>
+                        <div className="py-1.5">
+                          {isAdmin ? (
+                            <Link
+                              to="/admin"
+                              onClick={() => setProfileDropdownOpen(false)}
+                              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                            >
+                              <LayoutDashboard className="w-4 h-4 text-gray-400" />
+                              Admin Dashboard
+                            </Link>
+                          ) : (
+                            <Link
+                              to="/my-issues"
+                              onClick={() => setProfileDropdownOpen(false)}
+                              className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                            >
+                              <ClipboardList className="w-4 h-4 text-gray-400" />
+                              My Issues
+                            </Link>
+                          )}
+                          <button
+                            onClick={onLogout}
+                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors border-t border-gray-100 mt-1"
                           >
-                            📊 Admin Dashboard
-                          </Link>
-                        ) : (
-                          <Link
-                            to="/my-issues"
-                            onClick={() => setProfileDropdownOpen(false)}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors font-medium"
-                          >
-                            📋 My Issues
-                          </Link>
-                        )}
-
-                        <button
-                          onClick={onLogout}
-                          className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors font-medium border-t border-gray-200"
-                        >
-                          🚪 Logout
-                        </button>
-                      </div>
-                    </motion.div>
-                  )}
+                            <LogOut className="w-4 h-4" />
+                            Logout
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
             ) : (
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
+              <div className="flex items-center gap-2">
                 <Link
                   to="/login"
-                  className="bg-civic-green-700 hover:bg-civic-green-800 text-white px-6 py-2 rounded-lg font-semibold transition-colors"
+                  className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-civic-green-600 hover:bg-gray-50 rounded-lg transition-all"
                 >
-                  Sign In
+                  Sign in
                 </Link>
-              </motion.div>
+                <Link
+                  to="/register"
+                  className="px-4 py-2 text-sm font-semibold text-white bg-civic-green-600 hover:bg-civic-green-500 rounded-lg transition-colors shadow-sm"
+                >
+                  Get started
+                </Link>
+              </div>
             )}
           </div>
 
-          <motion.button
-            whileTap={{ scale: 0.95 }}
+          {/* Mobile hamburger */}
+          <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden text-white text-2xl p-2"
-            aria-label="Toggle menu"
+            className="md:hidden w-9 h-9 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
           >
-            {mobileMenuOpen ? '✕' : '☰'}
-          </motion.button>
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </button>
         </div>
 
-        <motion.div
-          variants={mobileMenuVariants}
-          initial="hidden"
-          animate={mobileMenuOpen ? 'visible' : 'hidden'}
-          className="md:hidden overflow-hidden"
-        >
-          <div className="px-2 pt-2 pb-3 space-y-1 bg-civic-green-600">
-            {!isAdmin && (
-              <>
-                <Link
-                  to="/map"
-                  className="block text-white px-3 py-2 rounded-md hover:bg-civic-green-700 transition-colors font-medium"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Map
-                </Link>
-                <Link
-                  to="/report"
-                  className="block text-white px-3 py-2 rounded-md hover:bg-civic-green-700 transition-colors font-medium"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Report
-                </Link>
-                <a
-                  href="/#features"
-                  className="block text-white px-3 py-2 rounded-md hover:bg-civic-green-700 transition-colors font-medium"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  About
-                </a>
-              </>
-            )}
+        {/* Mobile menu */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className="md:hidden overflow-hidden border-t border-gray-100"
+            >
+              <div className="py-3 space-y-1">
+                {!isAdmin && (
+                  <>
+                    <Link
+                      to="/map"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-civic-green-600 transition-all"
+                    >
+                      <Map className="w-4 h-4" />
+                      Map
+                    </Link>
+                    <Link
+                      to="/report"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-civic-green-600 transition-all"
+                    >
+                      <Flag className="w-4 h-4" />
+                      Report
+                    </Link>
+                    <a
+                      href="/#features"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-civic-green-600 transition-all"
+                    >
+                      <Info className="w-4 h-4" />
+                      About
+                    </a>
 
-            <div className="border-t border-civic-green-700 my-2 pt-2">
-              {user ? (
-                <>
-                  <p className="text-white text-sm px-3 py-2 font-medium">
-                    👤 {getUserName()}
-                  </p>
-                  <p className="text-gray-100 text-xs px-3 pb-2">
-                    {user.email}
-                  </p>
-                  {isAdmin && (
-                    <p className="text-civic-green-200 text-xs px-3 py-1 font-semibold">
-                      ⭐ Admin Access
-                    </p>
-                  )}
-                  {isAdmin ? (
-                    <Link
-                      to="/admin"
-                      className="block bg-white text-civic-green-600 px-3 py-2 rounded-md font-semibold transition-colors mt-2"
+                    {/* GitHub - mobile */}
+                    <a
+                      href="https://github.com/prkr-28/CivicPulse"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all"
                     >
-                      Admin Dashboard
-                    </Link>
+                      Contribute on GitHub
+                    </a>
+                  </>
+                )}
+
+                <div className="border-t border-gray-100 pt-3 mt-2">
+                  {user ? (
+                    <>
+                      <div className="flex items-center gap-3 px-3 py-2 mb-2">
+                        <div className="w-9 h-9 bg-civic-green-600 text-white rounded-lg flex items-center justify-center text-sm font-bold">
+                          {getInitials()}
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-800">
+                            {getUserName()}
+                          </p>
+                          <p className="text-xs text-gray-500">{user.email}</p>
+                        </div>
+                      </div>
+                      {isAdmin ? (
+                        <Link
+                          to="/admin"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all"
+                        >
+                          <LayoutDashboard className="w-4 h-4" />
+                          Admin Dashboard
+                        </Link>
+                      ) : (
+                        <Link
+                          to="/my-issues"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all"
+                        >
+                          <ClipboardList className="w-4 h-4" />
+                          My Issues
+                        </Link>
+                      )}
+                      <button
+                        onClick={onLogout}
+                        className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-all mt-1"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Logout
+                      </button>
+                    </>
                   ) : (
-                    <Link
-                      to="/my-issues"
-                      className="block text-civic-green-200 px-3 py-2 rounded-md hover:bg-civic-green-700 transition-colors font-medium mt-2"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      My Issues
-                    </Link>
+                    <div className="flex flex-col gap-2 px-1">
+                      <Link
+                        to="/login"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="px-4 py-2.5 text-sm font-semibold text-center text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all"
+                      >
+                        Sign in
+                      </Link>
+                      <Link
+                        to="/register"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="px-4 py-2.5 text-sm font-semibold text-center text-white bg-civic-green-600 rounded-lg hover:bg-civic-green-500 transition-colors"
+                      >
+                        Get started
+                      </Link>
+                    </div>
                   )}
-                  <button
-                    onClick={onLogout}
-                    className="w-full text-left text-white px-3 py-2 rounded-md hover:bg-red-600 transition-colors font-medium mt-2"
-                  >
-                    🚪 Logout
-                  </button>
-                </>
-              ) : (
-                <Link
-                  to="/login"
-                  className="block text-white px-3 py-2 rounded-md hover:bg-civic-green-700 transition-colors font-semibold"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Sign In
-                </Link>
-              )}
-            </div>
-          </div>
-        </motion.div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.nav>
   );
 }
 
 export default Navbar;
-
