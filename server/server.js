@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const helmet = require('helmet');
 const path = require('path');
 
 const authRoutes = require('./routes/auth');
@@ -11,19 +10,6 @@ const adminRoutes = require('./routes/admin');
 const aiRoutes = require('./routes/ai');
 
 const app = express();
-
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      imgSrc: ["'self'", 'data:', 'https://*.tile.openstreetmap.org', 'https://a.tile.openstreetmap.org', 'https://b.tile.openstreetmap.org', 'https://c.tile.openstreetmap.org', 'https://res.cloudinary.com', 'https://cdnjs.cloudflare.com'],
-      styleSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com'],
-      scriptSrc: ["'self'", 'https://cdnjs.cloudflare.com'],
-      connectSrc: ["'self'", 'https://*.tile.openstreetmap.org', 'https://a.tile.openstreetmap.org', 'https://b.tile.openstreetmap.org', 'https://c.tile.openstreetmap.org']
-    }
-  },
-  referrerPolicy: { policy: 'same-origin' }
-}));
 
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'https://civicpulse-gn5g.onrender.com',
