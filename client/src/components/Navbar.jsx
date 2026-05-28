@@ -17,6 +17,7 @@ import {
   X,
   Bell,
 } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
 
 function Navbar() {
   const user = useAppSelector(selectUser);
@@ -106,23 +107,13 @@ function Navbar() {
 
           {/* Right side - desktop */}
           <div className="hidden md:flex items-center gap-3">
-            {/* GitHub link */}
-            <a
-              href="https://github.com/prkr-28/CivicPulse"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Contribute on GitHub"
-              className="w-9 h-9 flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-900 transition-colors text-sm font-bold"
-            >
-              GH
-            </a>
             {user ? (
               <div className="flex items-center gap-2">
                 {/* Bell */}
-                <button className="relative w-9 h-9 flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-civic-green-600 transition-colors">
+                {/* <button className="relative w-9 h-9 flex items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-civic-green-600 transition-colors">
                   <Bell className="w-5 h-5" />
                   <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-civic-green-500 rounded-full" />
-                </button>
+                </button> */}
 
                 {/* Avatar dropdown */}
                 <div className="relative">

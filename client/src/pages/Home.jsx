@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import { useAppSelector } from "../store/hooks";
 import { selectIsAdmin } from "../store/slices/authSlice";
 import Navbar from "../components/Navbar";
-import { Flag, Map } from "lucide-react";
+import { Flag, Map, MapPin } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
 
 function Home() {
   const isAdmin = useAppSelector(selectIsAdmin);
@@ -627,14 +628,28 @@ function Home() {
           {/* Footer */}
           <footer className="bg-gray-900 text-gray-400 py-10 px-4 sm:px-6">
             <div className="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-6">
-              <div className="flex items-center gap-2">
-                <span className="text-xl">📍</span>
-                <span className="text-white font-bold text-lg">CivicPulse</span>
-              </div>
+              <Link to="/" className="flex items-center gap-2 group">
+                <div className="w-8 h-8 bg-civic-green-600 rounded-lg flex items-center justify-center group-hover:bg-civic-green-500 transition-colors">
+                  <MapPin className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-xl font-bold text-white tracking-tight">
+                  CivicPulse
+                </span>
+              </Link>
               <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-6 text-sm text-center">
                 <span>Built with MERN</span>
                 <span className="hidden sm:inline text-gray-600">·</span>
-                <span>Open source</span>
+                <div className="flex items-center gap-1.5 text-gray-400">
+                  <span>Open source</span>
+                  <a
+                    href="https://github.com/prkr-28/CivicPulse"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Contribute on GitHub"
+                  >
+                    <FaGithub className="ml-2 w-5 h-5 cursor-pointer hover:text-gray-300" />
+                  </a>
+                </div>
                 <span className="hidden sm:inline text-gray-600">·</span>
                 <span>Made for India 🇮🇳</span>
               </div>
