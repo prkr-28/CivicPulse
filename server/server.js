@@ -15,9 +15,14 @@ const app = express();
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      imgSrc: ["'self'", 'data:', 'https://*.tile.openstreetmap.org', 'https://a.tile.openstreetmap.org', 'https://b.tile.openstreetmap.org', 'https://c.tile.openstreetmap.org', 'https://res.cloudinary.com', 'https://cdnjs.cloudflare.com']
+      defaultSrc: ["'self'"],
+      imgSrc: ["'self'", 'data:', 'https://*.tile.openstreetmap.org', 'https://a.tile.openstreetmap.org', 'https://b.tile.openstreetmap.org', 'https://c.tile.openstreetmap.org', 'https://res.cloudinary.com', 'https://cdnjs.cloudflare.com'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com'],
+      scriptSrc: ["'self'", 'https://cdnjs.cloudflare.com'],
+      connectSrc: ["'self'", 'https://*.tile.openstreetmap.org', 'https://a.tile.openstreetmap.org', 'https://b.tile.openstreetmap.org', 'https://c.tile.openstreetmap.org']
     }
-  }
+  },
+  referrerPolicy: { policy: 'same-origin' }
 }));
 
 app.use(cors({
