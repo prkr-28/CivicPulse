@@ -4,7 +4,15 @@ import { motion } from "framer-motion";
 import { useAppSelector } from "../store/hooks";
 import { selectIsAdmin } from "../store/slices/authSlice";
 import Navbar from "../components/Navbar";
-import { Flag, Map, MapPin } from "lucide-react";
+import {
+  Flag,
+  Map,
+  MapPin,
+  LayoutDashboard,
+  ClipboardList,
+  Info,
+  LogOut,
+} from "lucide-react";
 import { FaGithub } from "react-icons/fa";
 
 function Home() {
@@ -40,42 +48,106 @@ function Home() {
     <>
       <Navbar />
       {isAdmin ? (
-        <div className="min-h-screen bg-gradient-to-br from-civic-green-500 to-civic-green-600 flex items-center justify-center px-4">
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 relative overflow-hidden">
+          {/* Decorative background blobs */}
+          <div className="absolute -top-32 -left-32 w-96 h-96 bg-civic-green-100 rounded-full blur-3xl opacity-50 pointer-events-none" />
+          <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-civic-green-50 rounded-full blur-3xl opacity-60 pointer-events-none" />
+
+          {/* Dot grid */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle, #d1fae5 1px, transparent 1px)",
+              backgroundSize: "28px 28px",
+              opacity: 0.5,
+            }}
+          />
+
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-md w-full bg-white rounded-lg shadow-2xl p-8 text-center"
+            transition={{ duration: 0.5 }}
+            className="relative z-10 max-w-md w-full"
           >
-            <div className="text-6xl mb-6">⭐</div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              Welcome, Administrator
-            </h1>
-            <div className="bg-civic-green-100 border border-civic-green-300 text-civic-green-800 px-4 py-3 rounded-lg mb-8 text-sm">
-              <p className="font-semibold mb-2">✓ Admin Access Granted</p>
-              <p>
-                You have administrative privileges. You can manage issues, view
-                statistics, and update issue statuses.
-              </p>
+            {/* Card */}
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-xl overflow-hidden">
+              {/* Top accent bar */}
+              <div className="h-1.5 w-full bg-civic-green-600" />
+
+              <div className="p-8">
+                {/* Icon + badge row */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="w-14 h-14 bg-civic-green-50 border border-civic-green-100 rounded-2xl flex items-center justify-center">
+                    <LayoutDashboard className="w-7 h-7 text-civic-green-600" />
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-civic-green-700 bg-civic-green-50 border border-civic-green-200 px-3 py-1 rounded-full">
+                    <span className="w-1.5 h-1.5 bg-civic-green-500 rounded-full animate-pulse" />
+                    Admin Access Granted
+                  </span>
+                </div>
+
+                {/* Heading */}
+                <h1 className="text-2xl font-bold text-gray-900 mb-1">
+                  Welcome back, Administrator
+                </h1>
+                <p className="text-sm text-gray-500 mb-6 leading-relaxed">
+                  You have full administrative privileges — manage issues, view
+                  statistics, and update statuses from your dashboard.
+                </p>
+
+                {/* Privilege pills */}
+                <div className="grid grid-cols-3 gap-2 mb-8">
+                  {[
+                    {
+                      icon: <ClipboardList className="w-4 h-4" />,
+                      label: "Manage Issues",
+                    },
+                    {
+                      icon: <Flag className="w-4 h-4" />,
+                      label: "Update Status",
+                    },
+                    { icon: <Info className="w-4 h-4" />, label: "View Stats" },
+                  ].map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex flex-col items-center gap-1.5 bg-gray-50 border border-gray-100 rounded-xl py-3 px-2 text-center"
+                    >
+                      <span className="text-civic-green-600">{item.icon}</span>
+                      <span className="text-xs font-medium text-gray-600">
+                        {item.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Buttons */}
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => navigate("/admin")}
+                  className="w-full flex items-center justify-center gap-2 bg-civic-green-600 hover:bg-civic-green-500 text-white font-semibold py-3 rounded-xl transition-colors shadow-sm mb-3"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  Go to Admin Dashboard
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  onClick={() => navigate("/login")}
+                  className="w-full flex items-center justify-center gap-2 border border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300 font-medium py-3 rounded-xl transition-all text-sm"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sign in with a different account
+                </motion.button>
+              </div>
             </div>
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate("/admin")}
-              className="w-full bg-civic-green-600 hover:bg-civic-green-700 text-white font-bold py-3 rounded-lg transition-colors mb-4"
-            >
-              Go to Admin Dashboard
-            </motion.button>
-
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate("/login")}
-              className="w-full border-2 border-civic-green-600 text-civic-green-600 hover:bg-civic-green-50 font-semibold py-3 rounded-lg transition-colors"
-            >
-              Sign in with Different Account
-            </motion.button>
+            {/* Footer note */}
+            <p className="text-center text-xs text-gray-400 mt-4">
+              CivicPulse Admin · Secure access
+            </p>
           </motion.div>
         </div>
       ) : (
